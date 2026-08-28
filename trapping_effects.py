@@ -82,3 +82,15 @@ def find_power(target_rabi, waist_size, excited_linewidth, wave_vec_mag, m, m_pr
 def find_intensity(target_rabi, waist_size, excited_linewidth, wave_vec_mag, m, m_prime, phi, gamma=None, p=None):
     # find the intensity necessary to achieve a target rabi frequency given a specific waist size
     return P2I(find_power(target_rabi, waist_size, excited_linewidth, wave_vec_mag, m, m_prime, phi, gamma, p), waist_size)
+
+def first_order_dev(r, dr, beam_waist, rabi_initial):
+    # finds the first order standard deviation of rabi frequency given some pointing instability dr and distance off axis r
+    return 2*r*dr/beam_waist**2 * rabi_off_axis(r, beam_waist, rabi_initial)
+
+def second_order_dev(dr, beam_waist, rabi_initial):
+    # finds the second order standard deviation of rabi frequency assuming an on-axis pointing instability dr
+    return np.sqrt(2)*rabi_initial*dr**2/beam_waist**2
+
+def single_qubit_gate_fidelity(dOmega, t):
+    # find the single qubit gate fidelity for a pulse of time t and rabi frequency deviation of dOmega
+    return 1- (dOmega * t)**2/4
